@@ -43,29 +43,29 @@ const Home = () => {
         (a.rating?.average || 0)
     )
     .slice(0, 10);
+return (
+  <div className="bg-black min-h-screen">
+    <Banner show={shows[0]} />
 
-  return (
-    <>
-      <Banner show={shows[0]} />
+    <MovieRow
+      title="Trending Shows"
+      movies={trendingShows}
+    />
 
-      <MovieRow
-        title="Trending Shows"
-        movies={trendingShows}
-      />
+    <MovieRow
+      title="Popular Shows"
+      movies={popularShows}
+    />
 
-      <MovieRow
-        title="Popular Shows"
-        movies={popularShows}
-      />
+    <MovieRow
+      title="Top Rated Shows"
+      movies={topRatedShows}
+    />
 
-      <MovieRow
-        title="Top Rated Shows"
-        movies={topRatedShows}
-      />
-
-      <Footer />
-    </>
-  );
+    <Footer />
+  </div>
+);
+   
 };
 
 export default Home;

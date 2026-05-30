@@ -1,21 +1,34 @@
 import React from 'react'
-import { useState } from "react";
-import { movies } from "../data/movies";
+import{ useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
-import SearchBar from "../components/SearchBar";
 
 const Search = () => {
   const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const fetchShows = async () => {
+      try {
+        const response = await fetch("https://api.tvmaze.com/shows");
+        const data = await response.json();
+        setMovies(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchShows();
+  }, []);
 
   const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(query.toLowerCase())
+    movie.name.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <input
         type="text"
-        placeholder="Search Movies..."
+        placeholder="Search Shows..."
         className="w-full p-3 rounded bg-gray-800 mb-8 outline-none"
         value={query}
         onChange={(e) => setQuery(e.target.value)}

@@ -1,48 +1,44 @@
 import React from 'react'
 import { useParams } from "react-router-dom";
-import { movies } from "../data/movies";
+import { useEffect, useState } from "react";
 
 const MovieDetails = () => {
   const { id } = useParams();
+  const [show, setShow] = useState(null);
 
-  const movie = movies.find(
-    (movie) => movie.id === Number(id)
-  );
+  useEffect(() => {
+    fetch(`https://api.tvmaze.com/shows/${id}`)
+      .then((res) => res.json())
+      .then((data) => setShow(data));
+  }, [id]);
 
-  if (!movie) {
+  if (!show) {
     return (
-      <div className="h-screen bg-black text-white flex justify-center items-center">
-        Movie Not Found
+      <div className="h-screen bg-black text-white flex items-center justify-center">
+        Loading...
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-black text-white p-10">
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
+      <img
+        src={show.image?.original}
+        alt={show.name}
+        className="w-80 rounded-lg mb-6"
+      />
 
-        <img
-          src={movie.poster}
-          alt={movie.title}
-          className="w-full md:w-80 rounded-lg"
-        />
+      <h1 className="text-5xl font-bold mb-4">
+        {show.name}
+      </h1>
 
-        <div>
-          <h1 className="text-5xl font-bold mb-4">
-            {movie.title}
-          </h1>
+      <p className="mb-4">
+        Rating: {show.rating?.average || "N/A"}
+      </p>
 
-          <p className="text-gray-300 mb-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Repellendus, dolore. This is a sample movie description.
-          </p>
-
-          <button className="bg-red-600 px-6 py-3 rounded hover:bg-red-700">
-            ▶ Watch Now
-          </button>
-        </div>
-
-      </div>
+      <div
+        dangerouslySetInnerHTML={{ __html: show.summary }}
+      />
     </div>
   );
 };
